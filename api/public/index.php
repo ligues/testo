@@ -26,8 +26,9 @@ $app->get('/', function (Request $request, Response $response) {
 $app->getContainer()->get("db");
 
 require 'users.php';
-require 'vin.php';
-require 'claims.php';
+require 'schools.php';
+require 'syllabuses.php';
+require 'classes.php';
 //require 'api_functions.php';
 
 

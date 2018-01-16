@@ -3,8 +3,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class User_account extends Model {
+class User extends Model {
 
-    protected $fillable = array('password','email', 'salt');
+    protected $fillable = array('user','password');
 
 }

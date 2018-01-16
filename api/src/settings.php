@@ -19,7 +19,7 @@ return [
         'db' => [
             'driver' => 'mysql',
             'host' => 'localhost',
-            'database' => 'uat_users',
+            'database' => 'testo',
             'username' => 'root',
             'password' => '',
             'charset'   => 'utf8',
@@ -28,7 +28,7 @@ return [
         ],        
 
         'app' => [
-            'JWTKey' => 'example_key'
+            'JWTKey' => 'TD7AMS72MMSA2300S777D272X'
         ]        
 
     ],

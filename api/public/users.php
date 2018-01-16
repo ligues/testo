@@ -1,50 +1,112 @@
 <?php
 
-// User_accounts Api.
+// Users Api.
 
 use \Firebase\JWT\JWT;
 use Illuminate\Database\Capsule\Manager as DB;
 
 
-$app->post('/User_accounts/login', function ($request, $response, $args) use ($app) {
+//TODO: Revisar las funciones que se usan y las que no.
 
-    // Get User_account by field
+$app->get('/users', function ($request, $response, $args) {
+
+    $all = App\User::all();
+    return $this->response->withJson($all);
+});
+
+$app->get('/users/{id}', function ($request, $response, $args) {
+    // Get user by id
+    $userById = App\User::find($args['id']);
+    if ($userById)
+        return $this->response->withJson($userById);
+    else 
+        return $this->response->withJson("{}");
+});
+
+$app->post('/users', function ($request, $response, $args) {
+
+
+    //TODO: Agregar validación de usuario que ya existe
+
+    $allUsers = App\User::all();
+    $value = json_decode($request->getBody());
+
+    // Create a new user
+    $user = new App\User(array(
+        'user' => $value->user,
+        'password' => hash('sha512',$value->password)
+    ));
+    $user->save();
+
+    return $this->response->withJson($allUsers);
+
+
+});
+
+$app->put('/users/{id}', function ($request, $response, $args) {
+
+    // Get user by id
+    $user = App\User::find($args['id']);    
+    $value = json_decode($request->getBody());
+    $user->email = $value->email;
+    $user->save();
+
+    return $this->response->withJson($user);
+});
+
+$app->delete('/users/{id}', function ($request, $response, $args) {
+
+    $user = App\User::find($args['id']);
+    if ($user)
+        $user->delete();
+    $allUsers = App\User::all();
+
+    return $this->response->withJson($allUsers);
+});
+
+$app->post('/users/login', function ($request, $response, $args) use ($app) {
+
+    //TODO: Cambiar el dominio que se usa para le token
+
     $value = json_decode($request->getBody());
     
-    $User_account = App\User_account::where('username', $value->username)
-                            //->where('password', hash('sha512',$value->password))
+    $user = App\User::where('user', $value->user)
+                            ->where('password', hash('sha512',$value->password))
                             ->first();
-
-    $password = hash('sha512', $value->password . $User_account->salt );
-
-
-    if ($User_account->password == $password) {
+    if ($user){
         $key = $app->getContainer()->get('settings')['app']['JWTKey'];;
         $token = array(
             "iss" => "http://example.org",
             "aud" => "http://example.com",
             "iat" => time(),
             //"nbf" => 1357000000,
-            "id" => $User_account->user_id,
-            "email" => $User_account->username
+            "id" => $user->id,
+            "email" => $user->user
         );
 
         $jwt = JWT::encode($token, $key);
-        $arr = array('token' => $jwt, 'user_id' => $User_account->user_id, 'username' => $User_account->username);
-
-        return $this->response->withJson($arr);
+        $arr = array('token' => $jwt, 'id' => $user->id, 'user' => $user->user);
 
 
+        
+
+        return $this->response
+            ->withJson($arr)
+            ->withAddedHeader('Access-Control-Allow-Origin', '*');
+
+
+        //$decoded = JWT::decode($jwt, $key, array('HS256'));
+
+        //print_r($jwt);    
+        //print_r($decoded);    
     } else {
 
         $error = array(
-            "error" => "User_account not found or invalid password"
+            "error" => "User not found or invalid password"
             );
 
          return $this->response->withJson($error);
         
     }
-
-     
     
 });

@@ -1,0 +1,12 @@
+{
+  "name": "testo",
+  "app_id": "",
+  "type": "ionic-angular",
+  "integrations": {},
+  "proxies": [
+    {
+      "path": "/public",
+      "proxyUrl": "http://localhost/testo/api/public"
+    }
+  ]
+}
