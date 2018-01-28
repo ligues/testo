@@ -90,9 +90,7 @@ $app->post('/users/login', function ($request, $response, $args) use ($app) {
 
         
 
-        return $this->response
-            ->withJson($arr)
-            ->withAddedHeader('Access-Control-Allow-Origin', '*');
+        return $this->response->withJson($arr);
 
 
         //$decoded = JWT::decode($jwt, $key, array('HS256'));

@@ -11,6 +11,12 @@ import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { LoginPage } from '../pages/login/login';
 import { RegisterPage } from '../pages/register/register';
+import { SchoolPage } from '../pages/school/school';
+import { WelcomePage } from '../pages/welcome/welcome';
+import { Test1Page } from '../pages/test1/test1';
+import { Test2Page } from '../pages/test2/test2';
+import { Test3Page } from '../pages/test3/test3';
+import { TestPage } from '../pages/test/test';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -24,7 +30,13 @@ import { RemoteServiceProvider } from '../providers/remote-service/remote-servic
     HomePage,
     TabsPage,
     LoginPage,
-    RegisterPage
+    RegisterPage,
+    SchoolPage,
+    WelcomePage,
+    Test1Page,
+    Test2Page,
+    Test3Page,
+    TestPage
   ],
   imports: [
     BrowserModule, HttpModule, HttpClientModule,
@@ -38,7 +50,13 @@ import { RemoteServiceProvider } from '../providers/remote-service/remote-servic
     HomePage,
     TabsPage,
     LoginPage,
-    RegisterPage
+    RegisterPage,
+    SchoolPage,
+    WelcomePage,
+    Test1Page,
+    Test2Page,
+    Test3Page,
+    TestPage
   ],
   providers: [
     StatusBar,

@@ -44,7 +44,7 @@ $app->post('/schools/{level}', function ($request, $response, $args) use ($app) 
 
     $arr = array('schools' => $schools);
 
-    return $this->response->withJson($arr);
+    return $this->response->withJson($schools);
 
 
 

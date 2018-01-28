@@ -41,7 +41,10 @@ $app->post('/syllabuses/{school}', function ($request, $response, $args) use ($a
     );
 
 
-    $arr = array('classes' => $classes);
+    
+
+
+    $arr = $classes;
 
     return $this->response->withJson($arr);
 

@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { LoggerService } from '../../services/log4ts/logger.service';
 import { RemoteServiceProvider } from '../../providers/remote-service/remote-service';
 import { TabsPage } from '../../pages/tabs/tabs';
+import { WelcomePage } from '../../pages/welcome/welcome';
 import { RegisterPage } from '../../pages/register/register';
 
 
@@ -34,17 +34,29 @@ export class LoginPage {
 
   onSignIn(){
 
-  	var userPostData = {"user":"carlos@ligues.com.mx","password":".March806"};
+  var userPostData = {"user":"carlos@ligues.com.mx","password":".March806"};
 
-	this.logger.postData(userPostData,'users/login').then((result) => {
+	this.logger.postData('users/login',userPostData).then((result) => {
 
       this.responseData = result;
 
-      console.log(result);
+        
+        const school_id = localStorage.getItem('school_id');
 
       	if(this.responseData.token){
-      		localStorage.setItem('userData', JSON.stringify(this.responseData));
-      		this.navCtrl.push(TabsPage);
+
+          if(school_id){
+            this.navCtrl.setRoot(TabsPage).then(() =>{
+              localStorage.setItem('userData', JSON.stringify(this.responseData));
+              this.navCtrl.popToRoot();
+            });
+          }
+          else{
+            this.navCtrl.setRoot(WelcomePage).then(() =>{
+              localStorage.setItem('userData', JSON.stringify(this.responseData));
+              this.navCtrl.popToRoot();
+            });
+          }
       	}
       	else{ 
       		console.log("User already exists"); 
