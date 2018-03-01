@@ -31,14 +31,30 @@ $app->post('/syllabuses/{school}', function ($request, $response, $args) use ($a
     $value = json_decode($request->getBody());
 
 
-    $classes = DB::select("
-        select c.id class_id,class, a.area, a.id area_id
+
+    if($value->type_id==="1"){
+
+    $sql = "
+        select c.id class_id,class, a.area, a.id area_id, sy.short as number
         from syllabuses sy
             inner join classes c on c.id = sy.class_id 
             inner join areas a on c.area_id = a.id
         where school_id = ".$args['school'] . " 
-        order by a.id  "
-    );
+        order by a.id  ";
+
+    }
+    else{
+         $sql = "
+        select c.id class_id,class, a.area, a.id area_id, sy.complete as number
+        from syllabuses sy
+            inner join classes c on c.id = sy.class_id 
+            inner join areas a on c.area_id = a.id
+        where school_id = ".$args['school'] . " 
+        order by a.id  ";
+    }
+
+
+    $classes = DB::select($sql);
 
 
     

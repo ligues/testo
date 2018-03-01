@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-import { TabsPage } from '../../pages/tabs/tabs';
+import { HomePage } from '../../pages/home/home';
 import { SchoolPage } from '../../pages/school/school';
 
 
@@ -35,7 +35,7 @@ export class WelcomePage {
   	}
   	else{
 
-  		this.navCtrl.setRoot(TabsPage).then(() =>{
+  		this.navCtrl.setRoot(HomePage).then(() =>{
   			localStorage.setItem('school_id', "23");
 		    this.navCtrl.popToRoot();
 		});

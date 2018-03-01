@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { RemoteServiceProvider } from '../../providers/remote-service/remote-service';
+import { Slides } from 'ionic-angular';
+import { ViewChild } from '@angular/core';
+import { TestPage } from '../../pages/test/test';
 
 /**
  * Generated class for the Test2Page page.
@@ -15,11 +19,19 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class Test2Page {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-  }
+  classes: string[];
+  errorMessage: string;
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad Test2Page');
+  class_id: string;
+
+  @ViewChild(Slides) slides: Slides;
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, private logger: RemoteServiceProvider) {}
+
+  test() {
+    this.navCtrl.setRoot(TestPage).then(() => {
+      this.navCtrl.popToRoot();
+    });
   }
 
 }

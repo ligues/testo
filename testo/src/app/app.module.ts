@@ -8,7 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AboutPage } from '../pages/about/about';
 import { ContactPage } from '../pages/contact/contact';
 import { HomePage } from '../pages/home/home';
-import { TabsPage } from '../pages/tabs/tabs';
+//import { TabsPage } from '../pages/tabs/tabs';
 import { LoginPage } from '../pages/login/login';
 import { RegisterPage } from '../pages/register/register';
 import { SchoolPage } from '../pages/school/school';
@@ -17,6 +17,7 @@ import { Test1Page } from '../pages/test1/test1';
 import { Test2Page } from '../pages/test2/test2';
 import { Test3Page } from '../pages/test3/test3';
 import { TestPage } from '../pages/test/test';
+import { ResultPage } from '../pages/result/result';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -28,7 +29,7 @@ import { RemoteServiceProvider } from '../providers/remote-service/remote-servic
     AboutPage,
     ContactPage,
     HomePage,
-    TabsPage,
+//    TabsPage,
     LoginPage,
     RegisterPage,
     SchoolPage,
@@ -36,19 +37,20 @@ import { RemoteServiceProvider } from '../providers/remote-service/remote-servic
     Test1Page,
     Test2Page,
     Test3Page,
-    TestPage
+    TestPage,
+    ResultPage
   ],
   imports: [
     BrowserModule, HttpModule, HttpClientModule,
     IonicModule.forRoot(MyApp)
   ],
-  bootstrap: [IonicApp],
+  bootstrap: [IonicApp],  
   entryComponents: [
     MyApp,
     AboutPage,
     ContactPage,
     HomePage,
-    TabsPage,
+//    TabsPage,
     LoginPage,
     RegisterPage,
     SchoolPage,
@@ -56,7 +58,8 @@ import { RemoteServiceProvider } from '../providers/remote-service/remote-servic
     Test1Page,
     Test2Page,
     Test3Page,
-    TestPage
+    TestPage,
+    ResultPage
   ],
   providers: [
     StatusBar,

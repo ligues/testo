@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RemoteServiceProvider } from '../../providers/remote-service/remote-service';
-import { TabsPage } from '../../pages/tabs/tabs';
+import { HomePage } from '../../pages/home/home';
 import { WelcomePage } from '../../pages/welcome/welcome';
 import { RegisterPage } from '../../pages/register/register';
 
@@ -20,10 +20,13 @@ export class LoginPage {
 	credentialsForm: FormGroup;
 
 
+  responseData: any = {};
+
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               private formBuilder: FormBuilder,
-              private logger: RemoteServiceProvider) {
+              private logger: RemoteServiceProvider,
+              private alertCtrl: AlertController) {
 
   	this.credentialsForm = this.formBuilder.group({
       email: [''],
@@ -34,9 +37,13 @@ export class LoginPage {
 
   onSignIn(){
 
-  var userPostData = {"user":"carlos@ligues.com.mx","password":".March806"};
 
-	this.logger.postData('users/login',userPostData).then((result) => {
+   let user = this.credentialsForm.controls.email.value;
+   let password = this.credentialsForm.controls.password.value;
+
+  var userPostData = {"user":user,"password":password};
+
+	this.logger.postData('users/login',userPostData,'').then((result) => {
 
       this.responseData = result;
 
@@ -46,7 +53,7 @@ export class LoginPage {
       	if(this.responseData.token){
 
           if(school_id){
-            this.navCtrl.setRoot(TabsPage).then(() =>{
+            this.navCtrl.setRoot(HomePage).then(() =>{
               localStorage.setItem('userData', JSON.stringify(this.responseData));
               this.navCtrl.popToRoot();
             });
@@ -59,9 +66,21 @@ export class LoginPage {
           }
       	}
       	else{ 
-      		console.log("User already exists"); 
+          let alert = this.alertCtrl.create({
+            title: 'Error',
+            subTitle: 'Usuario / Password incorrectos.',
+            buttons: ['Aceptar']
+          });
+          alert.present();
+
       	}
     	}, (err) => {
+          let alert = this.alertCtrl.create({
+            title: 'Error',
+            subTitle: err,
+            buttons: ['Aceptar']
+          });
+          alert.present();
       		console.log(err)
     	});
 

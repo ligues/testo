@@ -5,13 +5,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { map, catchError } from 'rxjs/operators';
 
-let apiUrl = 'https://ligues.com.mx/testo/public/';
+//let apiUrl = 'https://ligues.com.mx/testo/public/';
+let apiUrl = 'http://localhost/testo/api/public/';
 
 
 
 @Injectable()
 export class RemoteServiceProvider {
-
+ 
   constructor(public http: HttpClient) {
     
   }
@@ -43,7 +44,7 @@ export class RemoteServiceProvider {
         headers = headers.set('Authorization', token);
       }
 
-
+ 
     return this.http.post(apiUrl + url, JSON.stringify(data), {headers: headers}).pipe(
       map(this.extractData),
       catchError(this.handleError)

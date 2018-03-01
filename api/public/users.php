@@ -76,8 +76,8 @@ $app->post('/users/login', function ($request, $response, $args) use ($app) {
     if ($user){
         $key = $app->getContainer()->get('settings')['app']['JWTKey'];;
         $token = array(
-            "iss" => "http://example.org",
-            "aud" => "http://example.com",
+            "iss" => "https://ligues.com.mx",
+            "aud" => "https://ligues.com.mx",
             "iat" => time(),
             //"nbf" => 1357000000,
             "id" => $user->id,
@@ -104,6 +104,44 @@ $app->post('/users/login', function ($request, $response, $args) use ($app) {
             );
 
          return $this->response->withJson($error);
+        
+    }
+    
+});
+
+$app->post('/users/register', function ($request, $response, $args) use ($app) {
+
+    //TODO: Cambiar el dominio que se usa para le token
+
+    $value = json_decode($request->getBody());
+    
+    $user = App\User::where('user', $value->user)
+                           // ->where('password', hash('sha512',$value->password))
+                            ->first();
+
+    if ($user){
+        
+       $error = array(
+            "error" => "Usuario ya existe"
+            );
+
+         return $this->response->withJson($error);
+
+    } else {
+
+        $user = new App\User(array(
+        'user' => $value->user,
+        'password' => hash('sha512',$value->password)
+        ));
+
+        $user->save();
+
+         $return = array(
+            "ok" => "Usuario creado"
+            );
+
+         return $this->response->withJson($return);
+        
         
     }
     

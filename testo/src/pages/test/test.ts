@@ -1,8 +1,12 @@
-import { Component, Input } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component } from '@angular/core';
+import { IonicPage, NavController, NavParams,AlertController, LoadingController } from 'ionic-angular';
 import { RemoteServiceProvider } from '../../providers/remote-service/remote-service';
-import { DomSanitizer } from '@angular/platform-browser';
+import { Slides } from 'ionic-angular';
+import { ViewChild } from '@angular/core';
+import { HomePage } from '../../pages/home/home';
 
+import { TestPage } from '../../pages/test/test';
+import { ResultPage } from '../../pages/result/result';
 
 /**
  * Generated class for the TestPage page.
@@ -12,13 +16,11 @@ import { DomSanitizer } from '@angular/platform-browser';
  */
 
 
-export interface CountdownTimer {
-  seconds: number;
-  secondsRemaining: number;
-  runTimer: boolean;
-  hasStarted: boolean;
-  hasFinished: boolean;
-  displayTime: string;
+export interface obj_question {
+  question_id: number;
+  answer: string;
+  correct: number;
+  answer_correct: string;
 }
 
 @IonicPage()
@@ -27,117 +29,204 @@ export interface CountdownTimer {
   templateUrl: 'test.html',
 })
 
- 
-
-
 
 export class TestPage {
 
-	questions: string[];
-	errorMessage: string;
 
-	@Input() timeInSeconds: number;
-  timer: CountdownTimer;
-  private increment;
-  private transform;
-  private percent;
-  private fixTransform;
+  errorMessage: string;
+  QuestionX: _question;
+  public _answer: any[];
+  public result: any[];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,private logger: RemoteServiceProvider, private sanitizer: DomSanitizer) {
+  public list_questions: Array<_question> = [];
+
+  btn:string;
+
+  data: string[]; 
+  questions: string[]; 
+  test_id:string;
+  errorMessage: string;
+ 
+  class_id: string;
+
+  @ViewChild(Slides) slides: Slides;
+
+  constructor(public loadingCtrl: LoadingController, public navCtrl: NavController, public navParams: NavParams,private logger: RemoteServiceProvider,private alertCtrl: AlertController) {
+    this.btn = "none";
+
+
+
+
+  }
+
+  getTest() {
+
+
+     let loading = this.loadingCtrl.create({
+        content: 'Espere...'
+      });
+
+      loading.present();
+
+
+    var userPostData = {"school_id":localStorage.getItem('school_id'),"user_id":JSON.parse(localStorage.getItem('userData')).id,"type_id":localStorage.getItem('type_id')} 
+
+    this.logger.returnData("tests/",userPostData,JSON.parse(localStorage.getItem('userData')).token)
+       .subscribe(
+         questions => this.questions = questions,
+         error =>  this.errorMessage = <any>error,
+         () => loading.dismiss() );
   }
 
   ionViewDidLoad() {
-    this.setTest();
+
+    
+
+
+    this.getTest()
+  }
+
+  setData(d){
+    this.questions = d.questions;
+    this.test_id = d.test_id;
+    
   }
 
 
-  setTest() {
+ setAnswer(question_id, answer, correct, answer_correct) {
+
+
+    this.QuestionX = < obj_question > {
+      question_id: question_id,
+      answer: answer,
+      correct: correct,
+      answer_correct: answer_correct
+    }
+
+
+    
+  //debugger; 
+    
+    let x : number = 0; 
+    
+    if(this.list_questions.length===0){
+      this.list_questions.push(this.QuestionX)
+    }
+    else{
+       for (let question_tmp of this.list_questions) {
+            if(question_tmp.question_id===question_id){
+              question_tmp.answer = answer;
+              question_tmp.correct = correct;
+              x = 1;
+              break;
+            }
+        }
+
+        if(x==0){
+          this.list_questions.push(this.QuestionX)
+        }
+
+    }
+  
+    console.log(this.list_questions);
+
+  }
+
+ 
+  slideChanged(){
+    let currentIndex = this.slides.getActiveIndex();
+
+    if(this.slides.isEnd()){
+      this.btn = "inline-block";
+    }
+
+    
+ 
+
+  }
+
+  endTest(){
+
+    if(this.list_questions.length===this.questions.length){
 
 
 
-    this.logger.returnData("questions/"+localStorage.getItem('class_id')+"/"+20,"",JSON.parse(localStorage.getItem('userData')).token)
-       .subscribe(
-         questions => this.questions = questions,
-         error =>  this.errorMessage = <any>error);
+     let loading = this.loadingCtrl.create({
+        content: 'Espere...'
+      });
+
+      loading.present();
+
+
+      var userPostData = {"school_id":localStorage.getItem('school_id'),"user_id":JSON.parse(localStorage.getItem('userData')).id,"type_id":localStorage.getItem('type_id'),"answers":JSON.stringify(this.list_questions)} 
+
+      this.logger.returnData("tests/add",userPostData,JSON.parse(localStorage.getItem('userData')).token)
+         .subscribe(
+           data => this.data = data,
+           error =>  this.errorMessage = <any>error,
+           () => this.closeTest(this.data,loading)
+      );
+         
+    }
+    else{
+      let alert = this.alertCtrl.create({
+          title: 'Error',
+          subTitle: 'Tienes preguntas pendientes por contestar',
+          buttons: ['Aceptar']
+        });
+        alert.present();
+    }
+
+  }
+
+
+  close(){
+
+
+    let alert = this.alertCtrl.create({
+    title: 'Cancelar', 
+    message: '¿Deseas cancelar el examen?',
+    buttons: [
+      {
+        text: 'No',
+        role: 'cancel',
+        handler: () => {
+          
+        }
+      },
+      {
+        text: 'Si',
+        handler: () => {
+          this.navCtrl.pop();
+        }
+      }
+    ]
+  });
+
+  alert.present();
+
   }
 
   
 
-  ngOnInit() {
-    this.initTimer();
-    this.startTimer()
-  }
+  closeTest(d,l){
 
-  hasFinished() {
-    return this.timer.hasFinished;
-  }
-  initProgressBar() {
-    this.percent = 100;
-    this.increment = 180 / 100;
-    const progress = 'rotate(' + this.increment * this.percent + 'deg)';
-    this.transform = this.sanitizer.bypassSecurityTrustStyle(progress);
-    this.fixTransform = this.sanitizer.bypassSecurityTrustStyle(progress);
-  }
-
-  initTimer() {
-    this.initProgressBar();
-    if (!this.timeInSeconds) { this.timeInSeconds = 10000; }
-
-    this.timer = <CountdownTimer>{
-      seconds: this.timeInSeconds,
-      runTimer: false,
-      hasStarted: false,
-      hasFinished: false,
-      secondsRemaining: this.timeInSeconds
+    let params = {
+      test_id: d.test_id,
+      total: d.total,
+      corrects: d.corrects,
+      result: d.result
     };
 
-    this.timer.displayTime = this.getSecondsAsDigitalClock(this.timer.secondsRemaining);
-  }
+    l.dismiss();
 
-  startTimer() {
-    this.timer.hasStarted = true;
-    this.timer.runTimer = true;
-    this.timerTick();
-  }
+      this.navCtrl.setRoot(ResultPage).then(() =>{
+        this.navCtrl.popToRoot(params);
+      });
 
-  pauseTimer() {
-    this.timer.runTimer = false;
-  }
 
-  resumeTimer() {
-    this.startTimer();
-  }
 
-  timerTick() {
-    setTimeout(() => {
-      if (!this.timer.runTimer) { return; }
-      this.timer.secondsRemaining--;
-      this.timer.displayTime = this.getSecondsAsDigitalClock(this.timer.secondsRemaining);
-      this.percent = this.timer.secondsRemaining / this.timer.seconds * 100;
-      this.increment = 180 / 100;
-      const progress = 'rotate(' + this.increment * this.percent + 'deg)';
-      this.transform = this.sanitizer.bypassSecurityTrustStyle(progress);
-      this.fixTransform = this.sanitizer.bypassSecurityTrustStyle(progress);
-      if (this.timer.secondsRemaining > 0) {
-        this.timerTick();
-      } else {
-        this.timer.hasFinished = true;
-      }
-    }, 1000);
   }
-
-  getSecondsAsDigitalClock(inputSeconds: number) {
-    const secNum = parseInt(inputSeconds.toString(), 10); // don't forget the second param
-    const hours = Math.floor(secNum / 3600);
-    const minutes = Math.floor((secNum - (hours * 3600)) / 60);
-    const seconds = secNum - (hours * 3600) - (minutes * 60);
-    let hoursString = '';
-    let minutesString = '';
-    let secondsString = '';
-    hoursString = (hours < 10) ? '0' + hours : hours.toString();
-    minutesString = (minutes < 10) ? '0' + minutes : minutes.toString();
-    secondsString = (seconds < 10) ? '0' + seconds : seconds.toString();
-    return hoursString + ':' + minutesString + ':' + secondsString;
-  }
+  
 
 }

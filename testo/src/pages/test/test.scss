@@ -1,19 +1,32 @@
 page-test {
 
+
+.card{
+	padding-top:20px;
+}
+
+.card h4{
+	font-weight:bold;
+}
+
+.slide-zoom{
+	height:100%;
+}
+
 .radial-progress {
-    $circle-size: 150px;
+    $circle-size: 50px;
     $circle-background: #d6dadc;
     $circle-color: tomato;
-    $inset-size: 120px;
+    $inset-size: 30px;
     $inset-color: #fbfbfb;
     $transition-length: 1s;
     $shadow: 6px 6px 10px rgba(0,0,0,0.2);
     $percentage-color: tomato;
     $percentage-font-size: 22px;
 
-    margin: 50px;
+    margin: 10px;
     width: $circle-size;
-    height: $circle-size;
+    height: $circle-size; 
     background-color: $circle-background;
     border-radius: 50%;
 

@@ -29,6 +29,7 @@ require 'users.php';
 require 'schools.php';
 require 'syllabuses.php';
 require 'questions.php';
+require 'tests.php';
 //require 'api_functions.php';
 
 

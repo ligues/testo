@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams,ModalController } from 'ionic-angular';
 import { RemoteServiceProvider } from '../../providers/remote-service/remote-service';
 import { Slides } from 'ionic-angular';
 import { ViewChild } from '@angular/core';
+import { HomePage } from '../../pages/home/home';
+
 import { TestPage } from '../../pages/test/test';
 
 /**
@@ -19,18 +21,24 @@ import { TestPage } from '../../pages/test/test';
 })
 export class Test1Page {
 
-	classes: string[];
+	classes: string[]; 
 	errorMessage: string;
 
+  title: string;
+ 
 	class_id: string;
 
 	@ViewChild(Slides) slides: Slides;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,private logger: RemoteServiceProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams,private logger: RemoteServiceProvider, public modalCtrl:ModalController) {
   }
 
   getSyllabuses() {
-    this.logger.returnData("syllabuses/"+localStorage.getItem('school_id'),"",JSON.parse(localStorage.getItem('userData')).token)
+
+    var userPostData = {"type_id":localStorage.getItem('type_id')} 
+
+
+    this.logger.returnData("syllabuses/"+localStorage.getItem('school_id'),userPostData,JSON.parse(localStorage.getItem('userData')).token)
        .subscribe(
          classes => this.classes = classes,
          error =>  this.errorMessage = <any>error);
@@ -38,19 +46,21 @@ export class Test1Page {
 
   ionViewDidLoad() {
     this.getSyllabuses()
-    this.slides.lockSwipeToNext(true);
-  }
 
-  setClass(class_id){
-  	this.slides.lockSwipeToNext(false);	
-  	localStorage.setItem('class_id',class_id);
+    
+    if(localStorage.getItem('type_id')==="1"){
+      this.title = "Rápido";
+    }
+    else{
+      this.title = "Completo";
+    }
+
   }
 
   test(){
 
-      this.navCtrl.setRoot(TestPage).then(() =>{
-        this.navCtrl.popToRoot();
-      });
+      let modal = this.modalCtrl.create(TestPage);
+      modal.present();
   	
   }
 

@@ -1,4 +1,13 @@
-<form [formGroup]="credentialsForm">
+<ion-content padding>
+
+  
+    <br/>
+    <br/><br/>
+    <h2 text-center>Examen de Admisión</h2>
+  
+
+  
+   <form [formGroup]="credentialsForm">
 
   <ion-item>
     <ion-label floating>Email</ion-label>
@@ -11,6 +20,9 @@
     <ion-input [formControl]="credentialsForm.controls['password']"
         type="password"></ion-input>
   </ion-item>      
+
+<br>
+<br>
 
   <ion-row>
     <ion-col text-center>
@@ -29,3 +41,6 @@
   </ion-row>
 
 </form>
+
+</ion-content>
+

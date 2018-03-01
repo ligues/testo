@@ -1,1 +1,26 @@
-<ion-nav [root]="rootPage"></ion-nav>
+<ion-menu [content]="content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+      <ion-item-group>
+        <ion-item-divider color="light">Examenes</ion-item-divider>
+        <ion-item (click)="openTest1()">Examen Rápido</ion-item>
+        <ion-item (click)="openTest2()">Examen Completo</ion-item>
+      </ion-item-group>
+      <ion-item-group>
+        <ion-item-divider color="light">Historico</ion-item-divider>
+        <ion-item>Ver Resultados</ion-item>
+      </ion-item-group>
+      <ion-item-group>
+        <ion-item-divider color="light">Perfil</ion-item-divider>
+        <ion-item (click)="openWelcome()">Cambiar Escuela</ion-item>
+        <ion-item>Cambiar Password</ion-item>
+        <ion-item (click)="logout()">Salir</ion-item>
+      </ion-item-group>
+  </ion-content>
+</ion-menu>
+<!-- Disable swipe-to-go-back because it's poor UX to combine STGB with side menus -->
+<ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>

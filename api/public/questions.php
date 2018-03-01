@@ -27,28 +27,29 @@ $app->post('/questions/{class}/{questions}', function ($request, $response, $arg
             ->withStatus(500)
             ->withHeader('Content-Type', 'text/html')
             ->write('Wrong Token');
-    }
+    } 
 
     $value = json_decode($request->getBody());
 
 
-    $data = DB::select("
+    $data = DB::select(" 
 
-        SELECT * FROM questions
+        SELECT * FROM questions  
         where class_id = ".$args['class'] . "
         ORDER BY RAND()
-        LIMIT ".$args['questions'] 
+        LIMIT ".$args['questions']  
     );
 
 
     $questions = array();
 
     $i = 0;
-    foreach ($data as $question) {
-        $questions[$i]["id"] = $question->id;
+    foreach ($data as $question) {  
+        $questions[$i]["question_id"] = $question->id;
         $questions[$i]["question"] = $question->question;
         $questions[$i]["image"] = $question->image;
         $questions[$i]["class_id"] = $question->class_id;
+        $questions[$i]["answer"] = $question->answer; 
 
         $tmp_answers= array();
 

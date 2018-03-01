@@ -2,7 +2,9 @@
   "name": "testo",
   "app_id": "",
   "type": "ionic-angular",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "proxies": [
     {
       "path": "/public",

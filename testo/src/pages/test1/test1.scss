@@ -1,3 +1,15 @@
 page-test1 {
 
+	.slide-zoom {
+    height: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+
+  // space for swiper-pagination
+  .swiper-wrapper {
+    height: 95%;
+  }
+
+
 }

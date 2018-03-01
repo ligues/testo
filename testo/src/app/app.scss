@@ -14,3 +14,28 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+
+
+body {
+	background:#ffffff;
+}
+
+
+
+html{
+    font-size:8px;	
+  }
+  input{
+    font-size: .9rem;
+  }
+  h1{
+    font-size:1.1rem;
+  }
+
+  h2{
+    font-size:1.9rem;
+  }
+
+  p{
+    font-size:1.6rem;
+  }
